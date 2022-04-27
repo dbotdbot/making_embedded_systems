@@ -2,22 +2,34 @@
 #include "main.h"
 #include "machine.h"
 #include "led.h"
+#include "motor.h"
+//#include "communication.h"
+#include "encoder.h"
+#include "console.h"
+
 
 
 int main(void)
 {
-
+  //Initialize the various parts of the system (each is encapulated in its own c++ class with the excption of globals above)
   Machine::init();
   led::init();
+  motor::init();
+  //communication::init();
+  encoder::init();
+  ConsoleInit();
+
 
   while (1)
   {
 	  led::SetRGB(65535,0,0);
-	  HAL_Delay(300);
+	  HAL_Delay(100);
 	  led::SetRGB(0,65535,0);
-	  HAL_Delay(300);
+	  HAL_Delay(100);
 	  led::SetRGB(0,0,65535);
-	  HAL_Delay(300);
+	  HAL_Delay(100);
+
+
   }
 }
 

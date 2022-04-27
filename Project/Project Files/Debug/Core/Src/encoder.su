@@ -1,0 +1,2 @@
+../Core/Src/encoder.cpp:6:6:static void encoder::init()	96	static
+../Core/Src/encoder.cpp:31:6:static void encoder::Error_Handler()	4	static,ignoring_inline_asm
