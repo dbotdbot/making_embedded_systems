@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -46,7 +45,7 @@ SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
 
-UART_HandleTypeDef huart4;
+UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
@@ -58,7 +57,7 @@ static void MX_GPIO_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_CAN1_Init(void);
-static void MX_UART4_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 int flashLEDs = 1;
 int buttonVal = 0;
@@ -100,9 +99,10 @@ int main(void)
   MX_TIM1_Init();
   MX_SPI1_Init();
   MX_CAN1_Init();
-  MX_UART4_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Transmit(&huart1, (uint8_t *)"hello\n", strlen("hello\n"), 1000);
+  char in[8] = {0};
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -111,7 +111,7 @@ int main(void)
   {
 	 if(flashLEDs){
 		 HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
-		 HAL_Delay(100);
+		 //HAL_Delay(100);
 		 HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14);
 	 }
 	 else{
@@ -120,7 +120,17 @@ int main(void)
 	 }
 	 buttonVal = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
 
-	 HAL_UART_Transmit(&huart4, (uint8_t *)"hello", strlen("hello"), 10);
+
+
+	 //HAL_Delay(100);
+
+	 if(HAL_UART_Receive(&huart1, (uint8_t *)in, 8, 1000) == HAL_TIMEOUT){
+		 //HAL_UART_Transmit(&huart1, (uint8_t *)"Timeout\n", strlen("Timeout\n") , 10);
+	 }
+	 else{
+		 HAL_UART_Transmit(&huart1, (uint8_t *)in, 8 , 1);
+	 }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -328,35 +338,35 @@ static void MX_TIM1_Init(void)
 }
 
 /**
-  * @brief UART4 Initialization Function
+  * @brief USART1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_UART4_Init(void)
+static void MX_USART1_UART_Init(void)
 {
 
-  /* USER CODE BEGIN UART4_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-  /* USER CODE END UART4_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-  /* USER CODE BEGIN UART4_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-  /* USER CODE END UART4_Init 1 */
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN UART4_Init 2 */
+  /* USER CODE BEGIN USART1_Init 2 */
 
-  /* USER CODE END UART4_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 
@@ -370,13 +380,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */

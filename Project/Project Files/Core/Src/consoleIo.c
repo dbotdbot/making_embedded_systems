@@ -7,19 +7,19 @@
 #include "consoleIo.h"
 #include <stdio.h>
 
-UART_HandleTypeDef huart4;
+UART_HandleTypeDef huart1;
 
 eConsoleError ConsoleIoInit(void)
 {
-	    huart4.Instance = UART4;
-		huart4.Init.BaudRate = 115200;
-		huart4.Init.WordLength = UART_WORDLENGTH_8B;
-		huart4.Init.StopBits = UART_STOPBITS_1;
-		huart4.Init.Parity = UART_PARITY_NONE;
-		huart4.Init.Mode = UART_MODE_TX_RX;
-		huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-		huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-		if (HAL_UART_Init(&huart4) != HAL_OK)
+	    huart1.Instance = USART1;
+		huart1.Init.BaudRate = 115200;
+		huart1.Init.WordLength = UART_WORDLENGTH_8B;
+		huart1.Init.StopBits = UART_STOPBITS_1;
+		huart1.Init.Parity = UART_PARITY_NONE;
+		huart1.Init.Mode = UART_MODE_TX_RX;
+		huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+		huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+		if (HAL_UART_Init(&huart1) != HAL_OK)
 		{
 		  Error_Handler();
 		}
@@ -29,23 +29,25 @@ eConsoleError ConsoleIoInit(void)
 }
 eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uint32_t *readLength)
 {
-	uint32_t i = 0;
-	char ch;
-	
-	ch = getch_noblock();
-	while ( ( EOF != ch ) && ( i < bufferLength ) )
-	{
-		buffer[i] = (uint8_t) ch;
-		i++;
-		ch = getch_noblock();
-	}
-	*readLength = i;
+
+
+	HAL_UART_Receive(&huart1, (uint8_t *)buffer, bufferLength, 100);
+	*readLength = strlen(buffer);
+
 	return CONSOLE_SUCCESS;
 }
 
 eConsoleError ConsoleIoSendString(const char *buffer)
 {
-	HAL_UART_Transmit(&huart4, (uint8_t *)buffer, strlen(buffer) , 10);
+	HAL_UART_Transmit(&huart1, (uint8_t *)buffer, strlen(buffer) , 10);
+	return CONSOLE_SUCCESS;
+}
+
+eConsoleError ConsleGetVal()
+{
+	char in[8] = {0};
+	HAL_UART_Receive(&huart1, (uint8_t *)in, 8, 1);
+	HAL_UART_Transmit(&huart1, (uint8_t *)in, strlen(in) , 10);
 	return CONSOLE_SUCCESS;
 }
 

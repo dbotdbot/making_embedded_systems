@@ -1,3 +1,4 @@
 ../Core/Src/consoleIo.c:12:15:ConsoleIoInit	8	static
-../Core/Src/consoleIo.c:30:15:ConsoleIoReceive	32	static
-../Core/Src/consoleIo.c:46:15:ConsoleIoSendString	16	static
+../Core/Src/consoleIo.c:30:15:ConsoleIoReceive	24	static
+../Core/Src/consoleIo.c:40:15:ConsoleIoSendString	16	static
+../Core/Src/consoleIo.c:46:15:ConsleGetVal	16	static

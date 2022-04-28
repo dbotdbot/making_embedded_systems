@@ -473,3 +473,9 @@ eCommandResult_T ConsoleSendLine(const char *buffer)
 	ConsoleIoSendString(STR_ENDLINE);
 	return COMMAND_SUCCESS;
 }
+
+eCommandResult_T ConsoleGet()
+{
+	ConsleGetVal();
+	return COMMAND_SUCCESS;
+}

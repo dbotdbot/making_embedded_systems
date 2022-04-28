@@ -15,3 +15,4 @@
 ../Core/Src/console.c:436:25:ConsoleUtilsIntToHexChar	24	static
 ../Core/Src/console.c:462:18:ConsoleSendString	16	static
 ../Core/Src/console.c:470:18:ConsoleSendLine	16	static
+../Core/Src/console.c:477:18:ConsoleGet	8	static

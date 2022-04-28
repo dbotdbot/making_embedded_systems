@@ -22,13 +22,15 @@ int main(void)
 
   while (1)
   {
-	  led::SetRGB(65535,0,0);
-	  HAL_Delay(100);
-	  led::SetRGB(0,65535,0);
-	  HAL_Delay(100);
-	  led::SetRGB(0,0,65535);
-	  HAL_Delay(100);
+	  //led::SetRGB(65535,0,0);
+	  //HAL_Delay(50);
+	  //led::SetRGB(0,65535,0);
+	  //HAL_Delay(100);
+	  //led::SetRGB(0,0,65535);
+	  //HAL_Delay(100);
 
+	  //ConsoleProcess();
+	  ConsoleGet();
 
   }
 }
