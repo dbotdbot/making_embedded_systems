@@ -27,19 +27,21 @@ static eCommandResult_T ConsoleCommandLedGreen(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedBlue(const char buffer[]);
 static eCommandResult_T ConsoleCommandGetSetpoint(const char buffer[]);
 static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[]);
+static eCommandResult_T ConsoleCommandGetCurrentPos(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
     {";", &ConsoleCommandComment, HELP("Comment! You do need a space after the semicolon. ")},
     {"help", &ConsoleCommandHelp, HELP("Lists the commands available")},
     {"ver", &ConsoleCommandVer, HELP("Get the version string")},
-    {"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
-    {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
-	{"LED=RED", &ConsoleCommandLedRed, HELP("Set LED to RED")},
+    //{"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
+    //{"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
+	{"LED=Red", &ConsoleCommandLedRed, HELP("Set LED to RED")},
 	{"LED=Green", &ConsoleCommandLedGreen, HELP("Set LED to Green")},
 	{"LED=Blue", &ConsoleCommandLedBlue, HELP("Set LED to Blue")},
 	{"GetSetpoint", &ConsoleCommandGetSetpoint, HELP("Return current setpoint")},
 	{"SetSetpoint", &ConsoleCommandSetSetpoint, HELP("Set the setpoint")},
+	{"GetCurrentPos", &ConsoleCommandGetCurrentPos, HELP("Get current position")},
 
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
@@ -155,6 +157,16 @@ static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[])
 			ConsoleIoSendString(STR_ENDLINE);
 		}
 
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandGetCurrentPos(const char buffer[])
+{
+	ConsoleIoSendString("Current position = ");
+	ConsoleSendParamInt16((uint16_t)systemState.currentPos);
+	ConsoleIoSendString(STR_ENDLINE);
+
+	eCommandResult_T result = COMMAND_SUCCESS;
 	return result;
 }
 

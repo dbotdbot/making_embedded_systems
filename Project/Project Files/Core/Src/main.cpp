@@ -21,6 +21,7 @@ int main(void)
   encoder::init();
 
   systemState.setpoint = 100;
+  systemState.currentPos = 0;
   systemState.LEDRed = 0;
   systemState.LEDGreen = 0;
   systemState.LEDBlue = 0;

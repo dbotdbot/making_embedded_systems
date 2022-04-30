@@ -4,6 +4,7 @@
 
 struct MachineState {
 	uint32_t setpoint;
+	uint32_t currentPos;
 	uint32_t LEDRed;
 	uint32_t LEDGreen;
 	uint32_t LEDBlue;
