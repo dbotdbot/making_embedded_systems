@@ -9,6 +9,7 @@
 #include "console.h"
 #include "consoleIo.h"
 #include "consoleCommands.h"
+#include <global.h>
 
 #define MIN(X, Y)		(((X) < (Y)) ? (X) : (Y))
 #define NOT_FOUND		-1

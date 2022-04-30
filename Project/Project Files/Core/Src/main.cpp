@@ -6,7 +6,9 @@
 //#include "communication.h"
 #include "encoder.h"
 #include "console.h"
+#include "global.h"
 
+ struct MachineState systemState;
 
 
 int main(void)
@@ -17,20 +19,26 @@ int main(void)
   motor::init();
   //communication::init();
   encoder::init();
-  ConsoleInit();
 
+  systemState.setpoint = 100;
+  systemState.LEDRed = 0;
+  systemState.LEDGreen = 0;
+  systemState.LEDBlue = 0;
+
+
+  ConsoleInit();
 
   while (1)
   {
-	  //led::SetRGB(65535,0,0);
+	  led::SetRGB(systemState.LEDRed, systemState.LEDGreen, systemState.LEDBlue);
 	  //HAL_Delay(50);
 	  //led::SetRGB(0,65535,0);
 	  //HAL_Delay(100);
 	  //led::SetRGB(0,0,65535);
 	  //HAL_Delay(100);
 
-	  //ConsoleProcess();
-	  ConsoleGet();
+	  ConsoleProcess();
+	  //ConsoleGet();
 
   }
 }

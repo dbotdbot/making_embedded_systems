@@ -6,11 +6,14 @@
 //		    {"ver", &ConsoleCommandVer, HELP("Get the version string")},
 //		3. Implement the function, using ConsoleReceiveParam<Type> to get the parameters from the buffer.
 
+
 #include <string.h>
 #include "consoleCommands.h"
 #include "console.h"
 #include "consoleIo.h"
 #include "version.h"
+#include "global.h"
+#include "main.h"
 
 #define IGNORE_UNUSED_VARIABLE(x)     if ( &x == &x ) {}
 
@@ -19,6 +22,11 @@ static eCommandResult_T ConsoleCommandVer(const char buffer[]);
 static eCommandResult_T ConsoleCommandHelp(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
+static eCommandResult_T ConsoleCommandLedRed(const char buffer[]);
+static eCommandResult_T ConsoleCommandLedGreen(const char buffer[]);
+static eCommandResult_T ConsoleCommandLedBlue(const char buffer[]);
+static eCommandResult_T ConsoleCommandGetSetpoint(const char buffer[]);
+static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
@@ -27,6 +35,11 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"ver", &ConsoleCommandVer, HELP("Get the version string")},
     {"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
+	{"LED=RED", &ConsoleCommandLedRed, HELP("Set LED to RED")},
+	{"LED=Green", &ConsoleCommandLedGreen, HELP("Set LED to Green")},
+	{"LED=Blue", &ConsoleCommandLedBlue, HELP("Set LED to Blue")},
+	{"GetSetpoint", &ConsoleCommandGetSetpoint, HELP("Return current setpoint")},
+	{"SetSetpoint", &ConsoleCommandSetSetpoint, HELP("Set the setpoint")},
 
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
@@ -86,6 +99,62 @@ static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[])
 		ConsoleSendParamHexUint16(parameterUint16);
 		ConsoleIoSendString(STR_ENDLINE);
 	}
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandLedRed(const char buffer[])
+{
+	eCommandResult_T result = COMMAND_SUCCESS;
+
+	systemState.LEDRed = 65535;
+	systemState.LEDGreen = 0;
+	systemState.LEDBlue = 0;
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandLedGreen(const char buffer[])
+{
+	eCommandResult_T result = COMMAND_SUCCESS;
+
+	systemState.LEDRed = 0;
+	systemState.LEDGreen = 65535;
+	systemState.LEDBlue = 0;
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandLedBlue(const char buffer[])
+{
+	eCommandResult_T result = COMMAND_SUCCESS;
+
+	systemState.LEDRed = 0;
+	systemState.LEDGreen = 0;
+	systemState.LEDBlue = 65535;
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandGetSetpoint(const char buffer[])
+{
+	ConsoleIoSendString("setpoint = ");
+	ConsoleSendParamInt16((uint16_t)systemState.setpoint);
+	ConsoleIoSendString(STR_ENDLINE);
+
+	eCommandResult_T result = COMMAND_SUCCESS;
+	return result;
+}
+
+static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[])
+{
+	int16_t parameterInt;
+		eCommandResult_T result;
+		result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
+		if ( COMMAND_SUCCESS == result )
+		{
+			systemState.setpoint = (uint32_t)parameterInt;
+			ConsoleIoSendString("Setpoint updated to ");
+			ConsoleSendParamInt16((uint16_t)systemState.setpoint);
+			ConsoleIoSendString(STR_ENDLINE);
+		}
+
 	return result;
 }
 

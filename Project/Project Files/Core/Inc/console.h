@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <global.h>
 
 // User configuration
 #define CONSOLE_PROMPT			("> ")

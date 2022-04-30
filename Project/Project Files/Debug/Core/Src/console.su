@@ -1,18 +1,18 @@
-../Core/Src/console.c:39:17:ConsoleCommandMatch	24	static
-../Core/Src/console.c:72:17:ConsoleResetBuffer	32	static
-../Core/Src/console.c:92:16:ConsoleCommandEndline	24	static
-../Core/Src/console.c:111:6:ConsoleInit	16	static
-../Core/Src/console.c:131:6:ConsoleProcess	32	static
-../Core/Src/console.c:193:25:ConsoleParamFindN	40	static
-../Core/Src/console.c:223:18:ConsoleReceiveParamInt16	48	static
-../Core/Src/console.c:258:18:ConsoleReceiveParamHexUint16	48	static
-../Core/Src/console.c:296:18:ConsoleSendParamHexUint16	32	static
-../Core/Src/console.c:317:18:ConsoleSendParamHexUint8	24	static
-../Core/Src/console.c:342:13:smallItoa	40	static
-../Core/Src/console.c:379:18:ConsoleSendParamInt16	24	static
-../Core/Src/console.c:393:18:ConsoleSendParamInt32	32	static
-../Core/Src/console.c:405:25:ConsoleUtilHexCharToInt	24	static
-../Core/Src/console.c:436:25:ConsoleUtilsIntToHexChar	24	static
-../Core/Src/console.c:462:18:ConsoleSendString	16	static
-../Core/Src/console.c:470:18:ConsoleSendLine	16	static
-../Core/Src/console.c:477:18:ConsoleGet	8	static
+../Core/Src/console.cpp:40:17:uint32_t ConsoleCommandMatch(const char*, const char*)	24	static
+../Core/Src/console.cpp:73:17:uint32_t ConsoleResetBuffer(char*, uint32_t, uint32_t)	32	static
+../Core/Src/console.cpp:93:16:int32_t ConsoleCommandEndline(const char*, uint32_t)	24	static
+../Core/Src/console.cpp:112:6:void ConsoleInit()	16	static
+../Core/Src/console.cpp:132:6:void ConsoleProcess()	32	static
+../Core/Src/console.cpp:194:25:eCommandResult_T ConsoleParamFindN(const char*, uint8_t, uint32_t*)	40	static
+../Core/Src/console.cpp:224:18:eCommandResult_T ConsoleReceiveParamInt16(const char*, uint8_t, int16_t*)	48	static
+../Core/Src/console.cpp:259:18:eCommandResult_T ConsoleReceiveParamHexUint16(const char*, uint8_t, uint16_t*)	48	static
+../Core/Src/console.cpp:297:18:eCommandResult_T ConsoleSendParamHexUint16(uint16_t)	32	static
+../Core/Src/console.cpp:318:18:eCommandResult_T ConsoleSendParamHexUint8(uint8_t)	24	static
+../Core/Src/console.cpp:343:13:void smallItoa(int, char*, int)	40	static
+../Core/Src/console.cpp:380:18:eCommandResult_T ConsoleSendParamInt16(int16_t)	24	static
+../Core/Src/console.cpp:394:18:eCommandResult_T ConsoleSendParamInt32(int32_t)	32	static
+../Core/Src/console.cpp:406:25:eCommandResult_T ConsoleUtilHexCharToInt(char, uint8_t*)	24	static
+../Core/Src/console.cpp:437:25:eCommandResult_T ConsoleUtilsIntToHexChar(uint8_t, char*)	24	static
+../Core/Src/console.cpp:463:18:eCommandResult_T ConsoleSendString(const char*)	16	static
+../Core/Src/console.cpp:471:18:eCommandResult_T ConsoleSendLine(const char*)	16	static
+../Core/Src/console.cpp:478:18:eCommandResult_T ConsoleGet()	8	static

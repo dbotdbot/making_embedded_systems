@@ -1,6 +1,11 @@
-../Core/Src/consoleCommands.c:34:25:ConsoleCommandComment	16	static
-../Core/Src/consoleCommands.c:41:25:ConsoleCommandHelp	32	static
-../Core/Src/consoleCommands.c:62:25:ConsoleCommandParamExampleInt16	24	static
-../Core/Src/consoleCommands.c:78:25:ConsoleCommandParamExampleHexUint16	24	static
-../Core/Src/consoleCommands.c:92:25:ConsoleCommandVer	24	static
-../Core/Src/consoleCommands.c:104:31:ConsoleCommandsGetTable	4	static
+../Core/Src/consoleCommands.cpp:47:25:eCommandResult_T ConsoleCommandComment(const char*)	16	static
+../Core/Src/consoleCommands.cpp:54:25:eCommandResult_T ConsoleCommandHelp(const char*)	32	static
+../Core/Src/consoleCommands.cpp:75:25:eCommandResult_T ConsoleCommandParamExampleInt16(const char*)	24	static
+../Core/Src/consoleCommands.cpp:91:25:eCommandResult_T ConsoleCommandParamExampleHexUint16(const char*)	24	static
+../Core/Src/consoleCommands.cpp:105:25:eCommandResult_T ConsoleCommandLedRed(const char*)	24	static
+../Core/Src/consoleCommands.cpp:115:25:eCommandResult_T ConsoleCommandLedGreen(const char*)	24	static
+../Core/Src/consoleCommands.cpp:125:25:eCommandResult_T ConsoleCommandLedBlue(const char*)	24	static
+../Core/Src/consoleCommands.cpp:135:25:eCommandResult_T ConsoleCommandGetSetpoint(const char*)	24	static
+../Core/Src/consoleCommands.cpp:145:25:eCommandResult_T ConsoleCommandSetSetpoint(const char*)	24	static
+../Core/Src/consoleCommands.cpp:161:25:eCommandResult_T ConsoleCommandVer(const char*)	24	static
+../Core/Src/consoleCommands.cpp:173:31:const sConsoleCommandTable_T* ConsoleCommandsGetTable()	4	static

@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 #include "console.h"
+#include "main.h"
+#include "global.h"
 
 #define CONSOLE_COMMAND_MAX_COMMAND_LENGTH 10		// command only
 #define CONSOLE_COMMAND_MAX_LENGTH 256				// whole command with argument

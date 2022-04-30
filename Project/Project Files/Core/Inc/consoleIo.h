@@ -4,6 +4,7 @@
 #define CONSOLE_IO_H
 
 #include <stdint.h>
+#include <global.h>
 
 typedef enum {CONSOLE_SUCCESS = 0u, CONSOLE_ERROR = 1u } eConsoleError;
 

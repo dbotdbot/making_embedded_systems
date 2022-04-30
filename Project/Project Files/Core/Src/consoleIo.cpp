@@ -6,6 +6,7 @@
 #include "string.h"
 #include "consoleIo.h"
 #include <stdio.h>
+#include <global.h>
 
 UART_HandleTypeDef huart1;
 
@@ -32,7 +33,7 @@ eConsoleError ConsoleIoReceive(uint8_t *buffer, const uint32_t bufferLength, uin
 
 
 	HAL_UART_Receive(&huart1, (uint8_t *)buffer, bufferLength, 100);
-	*readLength = strlen(buffer);
+	*readLength = strlen((const char*)buffer);
 
 	return CONSOLE_SUCCESS;
 }

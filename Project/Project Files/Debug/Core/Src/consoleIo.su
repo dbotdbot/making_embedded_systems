@@ -1,4 +1,4 @@
-../Core/Src/consoleIo.c:12:15:ConsoleIoInit	8	static
-../Core/Src/consoleIo.c:30:15:ConsoleIoReceive	24	static
-../Core/Src/consoleIo.c:40:15:ConsoleIoSendString	16	static
-../Core/Src/consoleIo.c:46:15:ConsleGetVal	16	static
+../Core/Src/consoleIo.cpp:13:15:eConsoleError ConsoleIoInit()	8	static
+../Core/Src/consoleIo.cpp:31:15:eConsoleError ConsoleIoReceive(uint8_t*, uint32_t, uint32_t*)	24	static
+../Core/Src/consoleIo.cpp:41:15:eConsoleError ConsoleIoSendString(const char*)	16	static
+../Core/Src/consoleIo.cpp:47:15:eConsoleError ConsleGetVal()	16	static
