@@ -2,10 +2,11 @@
 #include <io_mapping.h>
 #include <processor.h>
 #include <main.h>
+#include <global.h>
 
 void encoder::init()
 {
-	SPI_HandleTypeDef hspi1;
+
 
 	//SPI
 	hspi1.Instance = SPI1;
@@ -26,7 +27,10 @@ void encoder::init()
 	}
 }
 
-
+void encoder::getRaw()
+{
+	//HAL_SPI_Receive(hspi1, pData, Size, Timeout);
+}
 
 void encoder::Error_Handler(void)
 {

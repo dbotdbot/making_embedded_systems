@@ -8,8 +8,8 @@
 #include "console.h"
 #include "global.h"
 
- struct MachineState systemState;
-
+struct MachineState systemState;
+SPI_HandleTypeDef hspi1;
 
 int main(void)
 {
@@ -17,7 +17,6 @@ int main(void)
   Machine::init();
   led::init();
   motor::init();
-  //communication::init();
   encoder::init();
 
   systemState.setpoint = 100;

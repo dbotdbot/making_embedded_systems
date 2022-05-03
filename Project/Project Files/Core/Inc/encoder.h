@@ -7,6 +7,7 @@ public:
 private:
 
 	static void Error_Handler();
+	static void getRaw();
 };
 
 
