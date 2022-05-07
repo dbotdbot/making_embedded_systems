@@ -10,6 +10,7 @@
 
 struct MachineState systemState;
 SPI_HandleTypeDef hspi1;
+GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 int main(void)
 {
@@ -38,6 +39,8 @@ int main(void)
 	  //HAL_Delay(100);
 
 	  ConsoleProcess();
+
+	  encoder::getRaw();
 	  //ConsoleGet();
 
   }

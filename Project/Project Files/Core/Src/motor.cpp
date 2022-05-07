@@ -2,11 +2,11 @@
 #include <io_mapping.h>
 #include <processor.h>
 #include <main.h>
+#include <global.h>
 
 void motor::init()
 {
-	//GPIO
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
 
 	/* GPIO Ports Clock Enable */
 	__HAL_RCC_GPIOH_CLK_ENABLE();

@@ -4,6 +4,7 @@
 #include "main.h"
 
 extern SPI_HandleTypeDef hspi1;
+extern GPIO_InitTypeDef GPIO_InitStruct;
 
 struct MachineState {
 	uint32_t setpoint;
