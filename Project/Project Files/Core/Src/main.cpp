@@ -14,11 +14,13 @@ GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 int main(void)
 {
-  //Initialize the various parts of the system (each is encapulated in its own c++ class with the excption of globals above)
+  //Initialize the various parts of the system (each is encapsulated in its own c++ class with the exception of globals above)
   Machine::init();
   led::init();
-  motor::init();
+  //motor::init();
   encoder::init();
+
+  motor motor1();
 
   systemState.setpoint = 100;
   systemState.currentPos = 0;
@@ -28,6 +30,7 @@ int main(void)
 
 
   ConsoleInit();
+  //motor::turnOnMotor();
 
   while (1)
   {
