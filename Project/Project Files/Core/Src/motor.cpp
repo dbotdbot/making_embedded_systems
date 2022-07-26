@@ -85,6 +85,19 @@ void motor::init()
 	/* EXTI interrupt init*/
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+
+	htim14.Instance = TIM14;
+	htim14.Init.Prescaler = 1600 -1;
+	htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim14.Init.Period = 10000 - 1;
+	htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
+	{
+	  Error_Handler();
+	}
+
 }
 
 void motor::turnOnMotor(void)
@@ -104,6 +117,10 @@ void motor::turnOnMotor(void)
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, (GPIO_PinState)1);  //DIR
 	//Assert logic low on STEP pin
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)0);  //STP
+
+	//Turn on timer and set motor speed to 0
+
+	this->setSpeed(0);
 
 }
 
@@ -126,27 +143,54 @@ void motor::turnOffMotor(void)
 void motor::turnSteps(int direction, int numSteps)
 {
 	int currentStep = 0;
+	this->setDirection(direction);
 	while (currentStep < numSteps)
 	{
-		this->step(direction);
+		this->step();
 		currentStep++;
 	}
 }
 
 void motor::setSpeed(int speedVal)
 {
-	if(speedVal == 0){
-		//turn off interupt
+	if(systemState.motorOnOff == 0)
+	{
+		HAL_TIM_Base_Start_IT(&htim14);
+		systemState.motorOnOff = 1;
+	}
+	//Determine if value needs changing
+	if(systemState.currentSpeed == speedVal)
+	{
+		//do nothing
 	}
 	else
 	{
+		if(speedVal == 0){
+			//turn off interrupt/stop timer
+		}
+		else
+		{
+			//First set direction
+			if(speedVal < 0)
+			{
+				this->setDirection(0);
+			}
+			else
+			{
+				this->setDirection(1);
+			}
+			//update interrupt for new time (determined via speedVal)
 
+		}
 	}
 }
 
-void motor::step(int direction)
-{
+void motor::setDirection(int direction){
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, (GPIO_PinState)direction);  //DIR
+}
+
+void motor::step()
+{
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)1);  //STP
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)0);  //STP
 }

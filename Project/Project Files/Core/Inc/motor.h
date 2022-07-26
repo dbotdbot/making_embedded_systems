@@ -12,7 +12,8 @@ public:
 	void setSpeed(int speedVal);
 	void changeMircoStepping(enum stepMode);
 private:
-	void step(int direction);
+	void setDirection(int direction);
+	void step();
 	static void Error_Handler();
 };
 

@@ -10,6 +10,7 @@
 
 struct MachineState systemState;
 SPI_HandleTypeDef hspi1;
+TIM_HandleTypeDef htim14;
 GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 int main(void)
@@ -27,6 +28,8 @@ int main(void)
   systemState.LEDRed = 0;
   systemState.LEDGreen = 0;
   systemState.LEDBlue = 0;
+  systemState.currentSpeed = 0;
+  systemState.motorOnOff = 0;
 
 
   ConsoleInit();
@@ -49,6 +52,14 @@ int main(void)
   }
 }
 
+//motor steping interrupt
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim == &htim14){
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_10);
+	}
+
+}
 
 void Error_Handler(void)
 {

@@ -1,7 +1,9 @@
 ../Core/Src/motor.cpp:7:6:static void motor::init()	40	static
-../Core/Src/motor.cpp:90:6:void motor::turnOnMotor()	16	static
-../Core/Src/motor.cpp:110:6:void motor::turnOffMotor()	16	static
-../Core/Src/motor.cpp:126:6:void motor::turnSteps(int, int)	32	static
-../Core/Src/motor.cpp:136:6:void motor::step(int)	16	static
-../Core/Src/motor.cpp:143:6:void motor::changeMircoStepping(stepMode)	32	static
-../Core/Src/motor.cpp:181:6:static void motor::Error_Handler()	4	static,ignoring_inline_asm
+../Core/Src/motor.cpp:103:6:void motor::turnOnMotor()	16	static
+../Core/Src/motor.cpp:127:6:void motor::turnOffMotor()	16	static
+../Core/Src/motor.cpp:143:6:void motor::turnSteps(int, int)	32	static
+../Core/Src/motor.cpp:154:6:void motor::setSpeed(int)	16	static
+../Core/Src/motor.cpp:188:6:void motor::setDirection(int)	16	static
+../Core/Src/motor.cpp:192:6:void motor::step()	16	static
+../Core/Src/motor.cpp:198:6:void motor::changeMircoStepping(stepMode)	32	static
+../Core/Src/motor.cpp:236:6:static void motor::Error_Handler()	4	static,ignoring_inline_asm

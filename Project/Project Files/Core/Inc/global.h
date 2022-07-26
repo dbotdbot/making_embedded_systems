@@ -4,6 +4,7 @@
 #include "main.h"
 
 extern SPI_HandleTypeDef hspi1;
+extern TIM_HandleTypeDef htim14;
 extern GPIO_InitTypeDef GPIO_InitStruct;
 
 enum stepMode {fullStep = 0, halfStep = 2, quarterStep = 4, eightStep = 8, sixteenthStep = 16};
@@ -18,6 +19,8 @@ struct MachineState {
 	uint32_t Enable;
 	uint32_t resetDevice;
 	uint32_t lowPowerState;
+	int32_t currentSpeed;
+	uint32_t motorOnOff;
 	enum stepMode stepMode;
 
 };
