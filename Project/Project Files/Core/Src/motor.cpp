@@ -3,6 +3,7 @@
 #include <processor.h>
 #include <main.h>
 #include <global.h>
+#include <cstdlib>
 
 void motor::init()
 {
@@ -88,15 +89,17 @@ void motor::init()
 
 
 	htim14.Instance = TIM14;
-	htim14.Init.Prescaler = 1600 -1;
+	htim14.Init.Prescaler = 16000 -1;
 	htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim14.Init.Period = 10000 - 1;
+	htim14.Init.Period = 100 - 1;
 	htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 	if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
 	{
 	  Error_Handler();
 	}
+	HAL_TIM_Base_Start_IT(&htim14);
+	//this->setSpeed(0);
 
 }
 
@@ -119,8 +122,6 @@ void motor::turnOnMotor(void)
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)0);  //STP
 
 	//Turn on timer and set motor speed to 0
-
-	this->setSpeed(0);
 
 }
 
@@ -153,11 +154,8 @@ void motor::turnSteps(int direction, int numSteps)
 
 void motor::setSpeed(int speedVal)
 {
-	if(systemState.motorOnOff == 0)
-	{
-		HAL_TIM_Base_Start_IT(&htim14);
-		systemState.motorOnOff = 1;
-	}
+
+
 	//Determine if value needs changing
 	if(systemState.currentSpeed == speedVal)
 	{
@@ -165,8 +163,14 @@ void motor::setSpeed(int speedVal)
 	}
 	else
 	{
+		HAL_TIM_Base_Stop(&htim14);
+		if(speedVal < -100){speedVal = -100;}
+		if(speedVal > 100){speedVal = 100;}
+
 		if(speedVal == 0){
 			//turn off interrupt/stop timer
+			HAL_TIM_Base_Stop(&htim14);
+			systemState.motorOnOff = 0;
 		}
 		else
 		{
@@ -180,6 +184,14 @@ void motor::setSpeed(int speedVal)
 				this->setDirection(1);
 			}
 			//update interrupt for new time (determined via speedVal)
+			//First determine prescaler (assume clock tick = 1ms)
+			int prescaler = 1000/(abs(speedVal));
+			htim14.Init.Period = prescaler - 1;
+			if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
+				{
+				  Error_Handler();
+				}
+			HAL_TIM_Base_Start_IT(&htim14);
 
 		}
 	}

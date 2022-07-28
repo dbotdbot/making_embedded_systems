@@ -13,15 +13,22 @@ SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim14;
 GPIO_InitTypeDef GPIO_InitStruct = {0};
 
+int timer_val = 0;
+
 int main(void)
 {
   //Initialize the various parts of the system (each is encapsulated in its own c++ class with the exception of globals above)
   Machine::init();
-  led::init();
+  //led::init();
   //motor::init();
   encoder::init();
 
-  motor motor1();
+  motor motor1;
+  motor1.init();
+
+  timer_val = __HAL_TIM_GET_COUNTER(&htim14);
+  timer_val = __HAL_TIM_GET_COUNTER(&htim14);
+
 
   systemState.setpoint = 100;
   systemState.currentPos = 0;
@@ -33,16 +40,20 @@ int main(void)
 
 
   ConsoleInit();
-  //motor::turnOnMotor();
+  motor1.turnOnMotor();
+  motor1.setSpeed(1);
 
+  timer_val = __HAL_TIM_GET_COUNTER(&htim14);
   while (1)
   {
-	  led::SetRGB(systemState.LEDRed, systemState.LEDGreen, systemState.LEDBlue);
+	  //led::SetRGB(systemState.LEDRed, systemState.LEDGreen, systemState.LEDBlue);
 	  //HAL_Delay(50);
 	  //led::SetRGB(0,65535,0);
 	  //HAL_Delay(100);
 	  //led::SetRGB(0,0,65535);
 	  //HAL_Delay(100);
+
+
 
 	  ConsoleProcess();
 
@@ -56,7 +67,8 @@ int main(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim14){
-		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)1);  //STP
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)0);  //STP
 	}
 
 }
