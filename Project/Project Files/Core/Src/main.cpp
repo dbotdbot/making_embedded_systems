@@ -26,9 +26,6 @@ int main(void)
   motor motor1;
   motor1.init();
 
-  timer_val = __HAL_TIM_GET_COUNTER(&htim14);
-  timer_val = __HAL_TIM_GET_COUNTER(&htim14);
-
 
   systemState.setpoint = 100;
   systemState.currentPos = 0;
@@ -42,8 +39,9 @@ int main(void)
   ConsoleInit();
   motor1.turnOnMotor();
   motor1.setSpeed(1);
+  motor1.setSpeed(10);
 
-  timer_val = __HAL_TIM_GET_COUNTER(&htim14);
+  //timer_val = __HAL_TIM_GET_COUNTER(&htim14);
   while (1)
   {
 	  //led::SetRGB(systemState.LEDRed, systemState.LEDGreen, systemState.LEDBlue);
@@ -53,7 +51,12 @@ int main(void)
 	  //led::SetRGB(0,0,65535);
 	  //HAL_Delay(100);
 
-
+	  //motor1.setSpeed(50);
+	  //HAL_Delay(5000);
+	  //motor1.setSpeed(10);
+	  //HAL_Delay(50000);
+	  ///motor1.setSpeed(80);
+	  //HAL_Delay(5000);
 
 	  ConsoleProcess();
 

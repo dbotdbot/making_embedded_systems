@@ -29,7 +29,7 @@ void motor::init()
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10|GPIO_PIN_12|GPIO_PIN_14, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10|GPIO_PIN_12, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_12, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13|GPIO_PIN_14, GPIO_PIN_RESET);
@@ -64,7 +64,7 @@ void motor::init()
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : PD10 PD12 */
-	GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_12;
+	GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_12;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -107,15 +107,16 @@ void motor::turnOnMotor(void)
 {
 
 	//Set enable pin to 0 for turn on outputs of fets
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, (GPIO_PinState)0);  //EN
-	//Set reset pin (1 = outputs off, 0 = outputs on)
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, (GPIO_PinState)0);  //RST
-	//Assert sleepmode logic high is off, logic low is on
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14, (GPIO_PinState)0);  //SLP
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, (GPIO_PinState)0);  //EN
+	//Set reset pin (0 = outputs off, 1 = outputs on)
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, (GPIO_PinState)1);  //RST
+	//Assert sleepmode logic high is on, logic low is off
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14, (GPIO_PinState)1);  //SLP
 	//Set the microsteping pins based on stepMode
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, (GPIO_PinState)1);  //MS1
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, (GPIO_PinState)1);  //MS2
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, (GPIO_PinState)1);  //MS3
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, (GPIO_PinState)0);  //MS1
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, (GPIO_PinState)0);  //MS2
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, (GPIO_PinState)0);  //MS2
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, (GPIO_PinState)0);  //MS3
 	//Assert direction
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, (GPIO_PinState)1);  //DIR
 	//Assert logic low on STEP pin
@@ -192,6 +193,7 @@ void motor::setSpeed(int speedVal)
 				  Error_Handler();
 				}
 			HAL_TIM_Base_Start_IT(&htim14);
+			systemState.currentSpeed = speedVal;
 
 		}
 	}
