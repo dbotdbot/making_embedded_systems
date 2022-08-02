@@ -19,7 +19,7 @@ public:
 
 	static void init();
 	static void getRaw();
-
+	float getAngle();
 
 
 private:

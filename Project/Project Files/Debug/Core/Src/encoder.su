@@ -1,3 +1,4 @@
 ../Core/Src/encoder.cpp:8:6:static void encoder::init()	16	static
 ../Core/Src/encoder.cpp:50:6:static void encoder::getRaw()	24	static
-../Core/Src/encoder.cpp:76:6:static void encoder::Error_Handler()	4	static,ignoring_inline_asm
+../Core/Src/encoder.cpp:76:7:float encoder::getAngle()	32	static
+../Core/Src/encoder.cpp:94:6:static void encoder::Error_Handler()	4	static,ignoring_inline_asm

@@ -1,4 +1,5 @@
 #include <motor.h>
+#include "encoder.h"
 #include <io_mapping.h>
 #include <processor.h>
 #include <main.h>
@@ -242,8 +243,23 @@ void motor::changeMircoStepping(enum stepMode mircoStepMode)
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, (GPIO_PinState)MS1);  //MS1
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, (GPIO_PinState)MS2);  //MS2
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, (GPIO_PinState)MS3);  //MS3
+}
 
+void motor::zeroMotor(encoder *ptr)
+{
+	//set direction
+	this->setDirection(1);
+	//step untill limit switch is triggered
+	/*
 
+	while(limit_switch_not_hit)
+	{
+		this->step();
+		HAL_Delay(2);
+	}
+	HAL_Delay(5);
+	systemState.zeroRaw = ptr->getRaw();
+	*/
 
 }
 

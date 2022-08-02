@@ -21,10 +21,17 @@ int main(void)
   Machine::init();
   //led::init();
   //motor::init();
-  encoder::init();
+  //encoder::init();
 
   motor motor1;
   motor1.init();
+  motor *motor1ptr;
+  motor1ptr = &motor1;
+
+  encoder encoder1;
+  encoder1.init();
+  encoder *encoder1ptr;
+  encoder1ptr = &encoder1;
 
 
   systemState.setpoint = 100;
@@ -38,8 +45,8 @@ int main(void)
 
   ConsoleInit();
   motor1.turnOnMotor();
-  motor1.setSpeed(1);
-  motor1.setSpeed(10);
+  motor1.zeroMotor(&encoder1);
+
 
   //timer_val = __HAL_TIM_GET_COUNTER(&htim14);
   while (1)

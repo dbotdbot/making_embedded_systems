@@ -73,6 +73,24 @@ void encoder::getRaw()
 
 }
 
+float encoder::getAngle(){
+	uint32_t adjustedPos = 0;
+	uint32_t encoderMax = 16384;
+	float encoderScaler = 0.0219;
+	float angle = 0;
+
+	this->getRaw();
+	if((systemState.currentPos - systemState.zeroRaw) > 0){
+		adjustedPos = systemState.currentPos - systemState.zeroRaw;
+	}
+	else if((systemState.currentPos - systemState.zeroRaw) < 0){
+		adjustedPos = (encoderMax - systemState.zeroRaw) + systemState.currentPos;
+	}
+	angle = adjustedPos * encoderScaler;
+	return angle;
+
+}
+
 void encoder::Error_Handler(void)
 {
   __disable_irq();

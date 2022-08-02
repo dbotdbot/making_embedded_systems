@@ -2,6 +2,7 @@
 #define MOTOR_H
 
 #include <global.h>
+#include <encoder.h>
 
 class motor final {
 public:
@@ -12,6 +13,7 @@ public:
 	void setSpeed(int speedVal);
 	void changeMircoStepping(enum stepMode);
 	void step();
+	void zeroMotor(encoder*);
 private:
 	void setDirection(int direction);
 
