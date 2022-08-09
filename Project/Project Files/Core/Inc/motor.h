@@ -14,8 +14,10 @@ public:
 	void changeMircoStepping(enum stepMode);
 	void step();
 	void zeroMotor(encoder*);
-private:
 	void setDirection(int direction);
+	void loopPID(encoder*);
+private:
+
 
 	static void Error_Handler();
 };

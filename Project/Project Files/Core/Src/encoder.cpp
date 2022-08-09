@@ -47,7 +47,7 @@ void encoder::init()
 
 }
 
-void encoder::getRaw()
+uint32_t encoder::getRaw()
 {
 	//Setup commands
 	uint16_t test = 0xffff;
@@ -70,6 +70,7 @@ void encoder::getRaw()
 	readValue = spi_buf[0] | (spi_buf[1] << 8);
 	value = readValue & valueMask;
 	systemState.currentPos = (uint32_t)value;
+	return (uint32_t)value;
 
 }
 

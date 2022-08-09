@@ -1,3 +1,4 @@
-../Core/Src/machine/machine.cpp:5:6:static void Machine::init()	8	static
-../Core/Src/machine/machine.cpp:11:6:static void Machine::Config_Clock()	88	static
-../Core/Src/machine/machine.cpp:49:6:static void Machine::Error_Handler()	4	static,ignoring_inline_asm
+../Core/Src/machine/machine.cpp:6:6:static void Machine::init()	8	static
+../Core/Src/machine/machine.cpp:13:6:static void Machine::Config_Clock()	88	static
+../Core/Src/machine/machine.cpp:51:6:static void Machine::MX_TIM1_Init()	96	static
+../Core/Src/machine/machine.cpp:129:6:static void Machine::Error_Handler()	4	static,ignoring_inline_asm

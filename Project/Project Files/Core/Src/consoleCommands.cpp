@@ -28,6 +28,7 @@ static eCommandResult_T ConsoleCommandLedBlue(const char buffer[]);
 static eCommandResult_T ConsoleCommandGetSetpoint(const char buffer[]);
 static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[]);
 static eCommandResult_T ConsoleCommandGetCurrentPos(const char buffer[]);
+static eCommandResult_T ConsoleCommandSetMode(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
@@ -42,6 +43,7 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
 	{"GetSetpoint", &ConsoleCommandGetSetpoint, HELP("Return current setpoint")},
 	{"SetSetpoint", &ConsoleCommandSetSetpoint, HELP("Set the setpoint")},
 	{"GetCurrentPos", &ConsoleCommandGetCurrentPos, HELP("Get current position")},
+	{"SetMode", &ConsoleCommandSetMode, HELP("Set mode 0=off, 1=track position, 2=speedmode")},
 
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
@@ -169,6 +171,23 @@ static eCommandResult_T ConsoleCommandGetCurrentPos(const char buffer[])
 	eCommandResult_T result = COMMAND_SUCCESS;
 	return result;
 }
+
+static eCommandResult_T ConsoleCommandSetMode(const char buffer[])
+{
+	int16_t parameterInt;
+		eCommandResult_T result;
+		result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
+		if ( COMMAND_SUCCESS == result )
+		{
+			systemState.mode = (uint32_t)parameterInt;
+			ConsoleIoSendString("Mode updated to ");
+			ConsoleSendParamInt16((uint16_t)systemState.mode);
+			ConsoleIoSendString(STR_ENDLINE);
+		}
+
+	return result;
+}
+
 
 static eCommandResult_T ConsoleCommandVer(const char buffer[])
 {

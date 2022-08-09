@@ -18,7 +18,7 @@ public:
 
 
 	static void init();
-	static void getRaw();
+	static uint32_t getRaw();
 	float getAngle();
 
 

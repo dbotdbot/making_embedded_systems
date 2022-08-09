@@ -10,6 +10,7 @@
 #include "consoleIo.h"
 #include "consoleCommands.h"
 #include <global.h>
+#include "encoder.h"
 
 #define MIN(X, Y)		(((X) < (Y)) ? (X) : (Y))
 #define NOT_FOUND		-1
@@ -129,7 +130,7 @@ void ConsoleInit(void)
 // ConsoleProcess
 // Looks for new inputs, checks for endline, then runs the matching command.
 // Call ConsoleProcess from a loop, it will handle commands as they become available
-void ConsoleProcess(void)
+void ConsoleProcess(encoder *ptr)
 {
 	const sConsoleCommandTable_T* commandTable;
 	uint32_t received;

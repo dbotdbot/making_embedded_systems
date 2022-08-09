@@ -82,7 +82,13 @@ void motor::init()
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);\
+
+	/*Configure GPIO pin : PD14 */
+	GPIO_InitStruct.Pin = GPIO_PIN_14;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 	/* EXTI interrupt init*/
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
@@ -131,7 +137,7 @@ void motor::turnOffMotor(void)
 {
 
 	//Set enable pin to 1 for turn off outputs of fets
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, (GPIO_PinState)1);  //EN
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, (GPIO_PinState)1);  //EN
 	//Set reset pin (1 = outputs off, 0 = outputs on)
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, (GPIO_PinState)1);  //RST
 	//Assert sleepmode is off (1)
@@ -248,18 +254,30 @@ void motor::changeMircoStepping(enum stepMode mircoStepMode)
 void motor::zeroMotor(encoder *ptr)
 {
 	//set direction
-	this->setDirection(1);
+	this->setDirection(0);
 	//step untill limit switch is triggered
-	/*
 
-	while(limit_switch_not_hit)
+
+	while((HAL_GPIO_ReadPin (GPIOD, GPIO_PIN_14)))
 	{
 		this->step();
-		HAL_Delay(2);
+		HAL_Delay(100);
 	}
 	HAL_Delay(5);
-	systemState.zeroRaw = ptr->getRaw();
-	*/
+	systemState.zeroRaw = (float)ptr->getRaw();
+
+
+}
+
+void motor::loopPID(encoder *encoder)
+{
+	//determine current position
+	float currentAngle = encoder->getAngle();
+	//determin error
+	float angleError = currentAngle - systemState.setAngle;
+
+
+
 
 }
 

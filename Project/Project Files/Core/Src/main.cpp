@@ -11,6 +11,7 @@
 struct MachineState systemState;
 SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim14;
+TIM_HandleTypeDef htim1;
 GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 int timer_val = 0;
@@ -41,16 +42,68 @@ int main(void)
   systemState.LEDBlue = 0;
   systemState.currentSpeed = 0;
   systemState.motorOnOff = 0;
+  systemState.mode = 0;
+  systemState.zeroRaw = -1;
+  systemState.lastTime = 0;
+  systemState.loopTime = 100;
+  systemState.angleErrorSum = 0;
+  systemState.angleLastError = 0;
+  systemState.angleErrorDer = 0;
+  systemState.kp = 1;
+  systemState.ki = 1;
+  systemState.kd = 1;
+  systemState.output = 0;
 
+
+  uint32_t currentMode = 0;
 
   ConsoleInit();
-  motor1.turnOnMotor();
-  motor1.zeroMotor(&encoder1);
+  //motor1.turnOnMotor();
+
+
+  //motor1.setDirection(1);
+  //motor1.setSpeed(10);
+  //HAL_Delay(5000);
+  //motor1.setSpeed(0);
+  //motor1.zeroMotor(&encoder1);
+  //motor1.turnOffMotor();
 
 
   //timer_val = __HAL_TIM_GET_COUNTER(&htim14);
   while (1)
   {
+	  switch(systemState.mode){
+	  case 0:
+		  	  if(systemState.mode == currentMode){
+		  		  //Do nothing already in Off mode
+		  	  }
+		  	  else{
+		  		  motor1.turnOffMotor();
+		  		  currentMode = 0;
+	  	  	  }
+		  	  break;
+	  case 1:
+		  	  if(systemState.mode != currentMode){
+		  		  //Motor needs to be turned on
+		  		  motor1.turnOnMotor();
+		  		  if(systemState.zeroRaw < 0){
+		  			  motor1.zeroMotor(&encoder1);
+		  		  }
+		  		  currentMode = 1;
+		  	  }
+		  	  //Code for control loop
+
+		  	  break;
+
+	  case 2:
+		  	  //code for speed mode
+		  	  currentMode = 2;
+		  	  break;
+
+	  default:
+		  motor1.turnOffMotor();
+
+	  }
 	  //led::SetRGB(systemState.LEDRed, systemState.LEDGreen, systemState.LEDBlue);
 	  //HAL_Delay(50);
 	  //led::SetRGB(0,65535,0);
@@ -60,12 +113,12 @@ int main(void)
 
 	  //motor1.setSpeed(50);
 	  //HAL_Delay(5000);
-	  //motor1.setSpeed(10);
+	  //motor1.setSpeed(0);
 	  //HAL_Delay(50000);
 	  ///motor1.setSpeed(80);
 	  //HAL_Delay(5000);
 
-	  ConsoleProcess();
+	  ConsoleProcess(&encoder1);
 
 	  encoder::getRaw();
 	  //ConsoleGet();
@@ -81,6 +134,34 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, (GPIO_PinState)0);  //STP
 	}
 
+}
+
+void controlLoop(encoder *encoder)
+{
+	uint32_t timeNow = (uint32_t)__HAL_TIM_GET_COUNTER(&htim1);
+	uint32_t timeSinceLast = (uint32_t)(timeNow - systemState.lastTime);
+	if(timeSinceLast > systemState.loopTime)
+	{
+		//Calculate Errors
+		uint32_t currentAngle = encoder->getAngle();
+		uint32_t angleError = systemState.setAngle - currentAngle;
+		systemState.angleErrorSum += (angleError * timeSinceLast);
+		systemState.angleErrorDer = (angleError - systemState.angleLastError)/timeSinceLast;
+
+		//Compute PID output
+		uint32_t prop = systemState.kp * angleError;
+		uint32_t integral = systemState.ki * systemState.angleErrorSum;
+		uint32_t derivitive = systemState.kd * systemState.angleErrorDer;
+
+		//Limit outputs
+
+		//Final output calc
+		systemState.output = prop + integral + derivitive;
+
+		//update old variables
+		systemState.angleLastError = angleError;
+		systemState.lastTime = timeNow;
+	}
 }
 
 void Error_Handler(void)

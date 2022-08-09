@@ -11,6 +11,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <global.h>
+#include "encoder.h"
 
 // User configuration
 #define CONSOLE_PROMPT			("> ")
@@ -24,7 +25,7 @@ extern "C" {
 
 // Salled from higher up areas of the code (main)
 void ConsoleInit(void);
-void ConsoleProcess(void); // call this in a loop
+void ConsoleProcess(encoder*); // call this in a loop
 
 // called from lower down areas of the code (consoleCommands)
 typedef enum { 

@@ -30,8 +30,9 @@ Core/Src/console.o: ../Core/Src/console.cpp ../Core/Inc/console.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/consoleIo.h ../Core/Inc/consoleCommands.h \
- ../Core/Inc/console.h ../Core/Inc/global.h
+ ../Core/Inc/encoder.h ../Core/Inc/consoleIo.h \
+ ../Core/Inc/consoleCommands.h ../Core/Inc/console.h ../Core/Inc/global.h \
+ ../Core/Inc/encoder.h
 ../Core/Inc/console.h:
 ../Core/Inc/global.h:
 ../Core/Inc/main.h:
@@ -65,7 +66,9 @@ Core/Src/console.o: ../Core/Src/console.cpp ../Core/Inc/console.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+../Core/Inc/encoder.h:
 ../Core/Inc/consoleIo.h:
 ../Core/Inc/consoleCommands.h:
 ../Core/Inc/console.h:
 ../Core/Inc/global.h:
+../Core/Inc/encoder.h:
