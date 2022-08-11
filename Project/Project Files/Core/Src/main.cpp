@@ -8,7 +8,11 @@
 #include "console.h"
 #include "global.h"
 
+//prototype
+void controlLoop(encoder *encoder);
+
 struct MachineState systemState;
+struct controlLoopParam PID;
 SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim1;
@@ -44,18 +48,19 @@ int main(void)
   systemState.motorOnOff = 0;
   systemState.mode = 0;
   systemState.zeroRaw = -1;
-  systemState.lastTime = 0;
-  systemState.loopTime = 100;
-  systemState.angleErrorSum = 0;
-  systemState.angleLastError = 0;
-  systemState.angleErrorDer = 0;
-  systemState.kp = 1;
-  systemState.ki = 1;
-  systemState.kd = 1;
-  systemState.output = 0;
+  systemState.currentMode = 0;
 
-
-  uint32_t currentMode = 0;
+  PID.lastTime = 0;
+  PID.loopTime = 100;
+  PID.angleErrorSum = 0;
+  PID.angleLastError = 0;
+  PID.angleErrorDer = 0;
+  PID.kp = 1;
+  PID.ki = 1;
+  PID.kd = 1;
+  PID.minOut = -100;
+  PID.maxOut = 100;
+  PID.output = 0;
 
   ConsoleInit();
   //motor1.turnOnMotor();
@@ -74,30 +79,30 @@ int main(void)
   {
 	  switch(systemState.mode){
 	  case 0:
-		  	  if(systemState.mode == currentMode){
+		  	  if(systemState.mode == systemState.currentMode){
 		  		  //Do nothing already in Off mode
 		  	  }
 		  	  else{
 		  		  motor1.turnOffMotor();
-		  		  currentMode = 0;
+		  		  systemState.currentMode = 0;
 	  	  	  }
 		  	  break;
 	  case 1:
-		  	  if(systemState.mode != currentMode){
+		  	  if(systemState.mode != systemState.currentMode){
 		  		  //Motor needs to be turned on
 		  		  motor1.turnOnMotor();
 		  		  if(systemState.zeroRaw < 0){
 		  			  motor1.zeroMotor(&encoder1);
 		  		  }
-		  		  currentMode = 1;
+		  		  systemState.currentMode = 1;
 		  	  }
 		  	  //Code for control loop
-
+		  	  //controlLoop(&encoder1);
 		  	  break;
 
 	  case 2:
 		  	  //code for speed mode
-		  	  currentMode = 2;
+		  	  systemState.currentMode = 2;
 		  	  break;
 
 	  default:
@@ -139,28 +144,35 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void controlLoop(encoder *encoder)
 {
 	uint32_t timeNow = (uint32_t)__HAL_TIM_GET_COUNTER(&htim1);
-	uint32_t timeSinceLast = (uint32_t)(timeNow - systemState.lastTime);
-	if(timeSinceLast > systemState.loopTime)
+	uint32_t timeSinceLast = (uint32_t)(timeNow - PID.lastTime);
+	if(timeSinceLast > PID.loopTime)
 	{
 		//Calculate Errors
-		uint32_t currentAngle = encoder->getAngle();
-		uint32_t angleError = systemState.setAngle - currentAngle;
-		systemState.angleErrorSum += (angleError * timeSinceLast);
-		systemState.angleErrorDer = (angleError - systemState.angleLastError)/timeSinceLast;
+		float currentAngle = encoder->getAngle();
+		float angleError = systemState.setAngle - currentAngle;
+		PID.angleErrorSum += (angleError * timeSinceLast);
+		PID.angleErrorDer = (angleError - PID.angleLastError)/timeSinceLast;
 
 		//Compute PID output
-		uint32_t prop = systemState.kp * angleError;
-		uint32_t integral = systemState.ki * systemState.angleErrorSum;
-		uint32_t derivitive = systemState.kd * systemState.angleErrorDer;
+		float prop = PID.kp * angleError;
+		float integral = PID.ki * PID.angleErrorSum;
+		float derivitive = PID.kd * PID.angleErrorDer;
 
-		//Limit outputs
+		//Limit Outputs if necessary
+		if(prop < PID.minOut){prop = PID.minOut;}
+		if(prop > PID.maxOut){prop = PID.maxOut;}
+		if(integral < PID.minOut){integral = PID.minOut;}
+		if(integral > PID.maxOut){integral = PID.maxOut;}
+		if(derivitive < PID.minOut){derivitive = PID.minOut;}
+		if(derivitive > PID.maxOut){derivitive = PID.maxOut;}
+
 
 		//Final output calc
-		systemState.output = prop + integral + derivitive;
+		PID.output = (uint32_t)(prop + integral + derivitive);
 
 		//update old variables
-		systemState.angleLastError = angleError;
-		systemState.lastTime = timeNow;
+		PID.angleLastError = angleError;
+		PID.lastTime = timeNow;
 	}
 }
 

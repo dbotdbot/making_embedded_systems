@@ -105,7 +105,7 @@ void motor::init()
 	{
 	  Error_Handler();
 	}
-	HAL_TIM_Base_Start_IT(&htim14);
+	//HAL_TIM_Base_Start_IT(&htim14);
 	//this->setSpeed(0);
 
 }
@@ -178,6 +178,7 @@ void motor::setSpeed(int speedVal)
 		if(speedVal == 0){
 			//turn off interrupt/stop timer
 			HAL_TIM_Base_Stop(&htim14);
+			HAL_TIM_Base_Stop_IT(&htim14);
 			systemState.motorOnOff = 0;
 		}
 		else
