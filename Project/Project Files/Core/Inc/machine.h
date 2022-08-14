@@ -9,6 +9,7 @@ private:
 	static void Config_Clock();
 	static void MX_TIM1_Init();
 	static void Error_Handler();
+	static void MX_TIM13_Init();
 };
 
 #endif

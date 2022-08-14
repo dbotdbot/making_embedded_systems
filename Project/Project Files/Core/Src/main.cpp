@@ -3,18 +3,23 @@
 #include "machine.h"
 #include "led.h"
 #include "motor.h"
-//#include "communication.h"
+#include <string.h>
+#include "consoleCommands.h"
+#include "console.h"
+#include "consoleIo.h"
 #include "encoder.h"
 #include "console.h"
 #include "global.h"
+#include <stdio.h>
 
 //prototype
-void controlLoop(encoder *encoder);
+int32_t controlLoop(encoder *encoder);
 
 struct MachineState systemState;
 struct controlLoopParam PID;
 SPI_HandleTypeDef hspi1;
-TIM_HandleTypeDef htim14;
+TIM_HandleTypeDef htim13; //clock used for PID loop
+TIM_HandleTypeDef htim14; //clock used for step function
 TIM_HandleTypeDef htim1;
 GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -40,6 +45,7 @@ int main(void)
 
 
   systemState.setpoint = 100;
+  systemState.setAngle = 45;
   systemState.currentPos = 0;
   systemState.LEDRed = 0;
   systemState.LEDGreen = 0;
@@ -97,7 +103,8 @@ int main(void)
 		  		  systemState.currentMode = 1;
 		  	  }
 		  	  //Code for control loop
-		  	  //controlLoop(&encoder1);
+		  	  controlLoop(&encoder1);
+		  	  motor1.setSpeed(PID.output);
 		  	  break;
 
 	  case 2:
@@ -141,39 +148,58 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 }
 
-void controlLoop(encoder *encoder)
+int32_t controlLoop(encoder *encoder)
 {
-	uint32_t timeNow = (uint32_t)__HAL_TIM_GET_COUNTER(&htim1);
+	int32_t waiting = 1;
+	uint32_t timeNow = (uint32_t)__HAL_TIM_GET_COUNTER(&htim13);
 	uint32_t timeSinceLast = (uint32_t)(timeNow - PID.lastTime);
-	if(timeSinceLast > PID.loopTime)
-	{
-		//Calculate Errors
-		float currentAngle = encoder->getAngle();
-		float angleError = systemState.setAngle - currentAngle;
-		PID.angleErrorSum += (angleError * timeSinceLast);
-		PID.angleErrorDer = (angleError - PID.angleLastError)/timeSinceLast;
 
-		//Compute PID output
-		float prop = PID.kp * angleError;
-		float integral = PID.ki * PID.angleErrorSum;
-		float derivitive = PID.kd * PID.angleErrorDer;
+		if(timeSinceLast > PID.loopTime)
+		{
+			//Calculate Errors
+			float currentAngle = encoder->getAngle();
+			float angleError = systemState.setAngle - currentAngle;
+			PID.angleErrorSum += (angleError * timeSinceLast);
+			PID.angleErrorDer = (angleError - PID.angleLastError)/timeSinceLast;
 
-		//Limit Outputs if necessary
-		if(prop < PID.minOut){prop = PID.minOut;}
-		if(prop > PID.maxOut){prop = PID.maxOut;}
-		if(integral < PID.minOut){integral = PID.minOut;}
-		if(integral > PID.maxOut){integral = PID.maxOut;}
-		if(derivitive < PID.minOut){derivitive = PID.minOut;}
-		if(derivitive > PID.maxOut){derivitive = PID.maxOut;}
+			//Compute PID output
+			float prop = PID.kp * angleError;
+			float integral = PID.ki * PID.angleErrorSum;
+			float derivitive = PID.kd * PID.angleErrorDer;
+
+			//Limit Outputs if necessary
+			if(prop < PID.minOut){prop = PID.minOut;}
+			if(prop > PID.maxOut){prop = PID.maxOut;}
+			if(integral < PID.minOut){integral = PID.minOut;}
+			if(integral > PID.maxOut){integral = PID.maxOut;}
+			if(derivitive < PID.minOut){derivitive = PID.minOut;}
+			if(derivitive > PID.maxOut){derivitive = PID.maxOut;}
 
 
-		//Final output calc
-		PID.output = (uint32_t)(prop + integral + derivitive);
+			//Final output calc
+			PID.output = (uint32_t)(prop + integral + derivitive);
 
-		//update old variables
-		PID.angleLastError = angleError;
-		PID.lastTime = timeNow;
-	}
+			//update old variables
+			PID.angleLastError = angleError;
+			PID.lastTime = timeNow;
+
+			//ConsoleIoInit();
+			ConsoleIoSendString("Set Angle = ");
+			ConsoleSendParamInt16((uint16_t)systemState.setAngle);
+			ConsoleIoSendString(" Current Angle = ");
+			ConsoleSendParamInt16((uint16_t)currentAngle);
+			ConsoleIoSendString(" Encoder Raw = ");
+			ConsoleSendParamInt16((uint16_t)encoder->getRaw());
+			ConsoleIoSendString(" Output = ");
+			ConsoleSendParamInt16((uint16_t)PID.output);
+			ConsoleIoSendString(" Error = ");
+			ConsoleSendParamInt16((uint16_t)angleError);
+			ConsoleIoSendString(STR_ENDLINE);
+
+			waiting = 0;
+			return 1;
+		}
+		return 0;
 }
 
 void Error_Handler(void)

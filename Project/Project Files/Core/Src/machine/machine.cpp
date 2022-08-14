@@ -8,6 +8,7 @@ void Machine::init()
 	HAL_Init();
 	Machine::Config_Clock();
 	Machine::MX_TIM1_Init();
+	Machine::MX_TIM13_Init();
 }
 
 void Machine::Config_Clock(void)
@@ -46,6 +47,32 @@ void Machine::Config_Clock(void)
 	    Error_Handler();
 	  }
 	  HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI, RCC_MCODIV_1);
+}
+
+void Machine::MX_TIM13_Init(void)
+{
+
+  /* USER CODE BEGIN TIM13_Init 0 */
+
+  /* USER CODE END TIM13_Init 0 */
+
+  /* USER CODE BEGIN TIM13_Init 1 */
+
+  /* USER CODE END TIM13_Init 1 */
+  htim13.Instance = TIM13;
+  htim13.Init.Prescaler = 1600-1;
+  htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim13.Init.Period = 10000-1;
+  htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim13) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM13_Init 2 */
+  HAL_TIM_Base_Start(&htim13);
+  /* USER CODE END TIM13_Init 2 */
+
 }
 
 void Machine::MX_TIM1_Init(void)

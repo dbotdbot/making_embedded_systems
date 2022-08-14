@@ -4,6 +4,7 @@
 #include "main.h"
 
 extern SPI_HandleTypeDef hspi1;
+extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
 extern TIM_HandleTypeDef htim1;
 extern GPIO_InitTypeDef GPIO_InitStruct;
