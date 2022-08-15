@@ -15,7 +15,7 @@ enum stepMode {fullStep = 0, halfStep = 2, quarterStep = 4, eightStep = 8, sixte
 struct MachineState {
 	uint32_t setpoint;
 	float setAngle;
-	uint32_t currentPos;
+	int32_t currentPos;
 	uint32_t LEDRed;
 	uint32_t LEDGreen;
 	uint32_t LEDBlue;
@@ -54,6 +54,7 @@ struct controlLoopParam{
 };
 
 extern struct MachineState systemState;
+extern struct controlLoopParam PID;
 
 
 

@@ -63,7 +63,7 @@ int main(void)
   PID.angleErrorDer = 0;
   PID.kp = 1;
   PID.ki = 1;
-  PID.kd = 1;
+  PID.kd = 0;
   PID.minOut = -100;
   PID.maxOut = 100;
   PID.output = 0;
@@ -151,16 +151,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 int32_t controlLoop(encoder *encoder)
 {
 	int32_t waiting = 1;
-	uint32_t timeNow = (uint32_t)__HAL_TIM_GET_COUNTER(&htim13);
-	uint32_t timeSinceLast = (uint32_t)(timeNow - PID.lastTime);
+	int32_t timeNow = (int32_t)__HAL_TIM_GET_COUNTER(&htim13);
+	int32_t timeSinceLast = (int32_t)(timeNow - PID.lastTime);
 
 		if(timeSinceLast > PID.loopTime)
 		{
 			//Calculate Errors
 			float currentAngle = encoder->getAngle();
 			float angleError = systemState.setAngle - currentAngle;
-			PID.angleErrorSum += (angleError * timeSinceLast);
-			PID.angleErrorDer = (angleError - PID.angleLastError)/timeSinceLast;
+			PID.angleErrorSum += (angleError * (timeSinceLast/1000));
+			PID.angleErrorDer = (angleError - PID.angleLastError)/(timeSinceLast/1000);
 
 			//Compute PID output
 			float prop = PID.kp * angleError;
@@ -177,7 +177,7 @@ int32_t controlLoop(encoder *encoder)
 
 
 			//Final output calc
-			PID.output = (uint32_t)(prop + integral + derivitive);
+			PID.output = (int32_t)(prop + integral + derivitive);
 
 			//update old variables
 			PID.angleLastError = angleError;
@@ -189,11 +189,17 @@ int32_t controlLoop(encoder *encoder)
 			ConsoleIoSendString(" Current Angle = ");
 			ConsoleSendParamInt16((uint16_t)currentAngle);
 			ConsoleIoSendString(" Encoder Raw = ");
-			ConsoleSendParamInt16((uint16_t)encoder->getRaw());
+			ConsoleSendParamInt16((uint16_t)systemState.currentPos);
+			//ConsoleIoSendString(" Encoder Zero = ");
+			//ConsoleSendParamInt16((uint16_t)systemState.zeroRaw);
 			ConsoleIoSendString(" Output = ");
 			ConsoleSendParamInt16((uint16_t)PID.output);
 			ConsoleIoSendString(" Error = ");
-			ConsoleSendParamInt16((uint16_t)angleError);
+			if(angleError > 0){ConsoleSendParamInt16((uint16_t)angleError);}
+			else if (angleError < 0){
+				ConsoleIoSendString("-");
+				ConsoleSendParamInt16((uint16_t)(angleError * -1));
+			}
 			ConsoleIoSendString(STR_ENDLINE);
 
 			waiting = 0;
