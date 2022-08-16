@@ -27,6 +27,7 @@ static eCommandResult_T ConsoleCommandLedGreen(const char buffer[]);
 static eCommandResult_T ConsoleCommandLedBlue(const char buffer[]);
 static eCommandResult_T ConsoleCommandGetSetpoint(const char buffer[]);
 static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[]);
+static eCommandResult_T ConsoleCommandSetAngle(const char buffer[]);
 static eCommandResult_T ConsoleCommandGetCurrentPos(const char buffer[]);
 static eCommandResult_T ConsoleCommandSetMode(const char buffer[]);
 static eCommandResult_T ConsoleCommandSetKp(const char buffer[]);
@@ -45,11 +46,12 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
 	{"LED=Blue", &ConsoleCommandLedBlue, HELP("Set LED to Blue")},
 	{"GetSetpoint", &ConsoleCommandGetSetpoint, HELP("Return current setpoint")},
 	{"SetSetpoint", &ConsoleCommandSetSetpoint, HELP("Set the setpoint")},
+	{"SetAngle", &ConsoleCommandSetAngle, HELP("Set the setpoint")},
 	{"GetCurrentPos", &ConsoleCommandGetCurrentPos, HELP("Get current position")},
 	{"SetMode", &ConsoleCommandSetMode, HELP("Set mode 0=off, 1=track position, 2=speedmode")},
-	{"SetMode", &ConsoleCommandSetKp, HELP("Set Kp")},
-	{"SetMode", &ConsoleCommandSetKi, HELP("Set Ki")},
-	{"SetMode", &ConsoleCommandSetKd, HELP("Set Kd")},
+	{"SetKp", &ConsoleCommandSetKp, HELP("Set Kp (*100)")},
+	{"SetKi", &ConsoleCommandSetKi, HELP("Set Ki (*100)")},
+	{"SetKd", &ConsoleCommandSetKd, HELP("Set Kd (*100)")},
 
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
@@ -168,6 +170,22 @@ static eCommandResult_T ConsoleCommandSetSetpoint(const char buffer[])
 	return result;
 }
 
+
+static eCommandResult_T ConsoleCommandSetAngle(const char buffer[])
+{
+	int16_t parameterInt;
+		eCommandResult_T result;
+		result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
+		if ( COMMAND_SUCCESS == result )
+		{
+			systemState.setAngle = (float)parameterInt;
+			ConsoleIoSendString("Set Angle updated to ");
+			ConsoleSendParamInt16((uint16_t)systemState.setpoint);
+			ConsoleIoSendString(STR_ENDLINE);
+		}
+
+	return result;
+}
 static eCommandResult_T ConsoleCommandGetCurrentPos(const char buffer[])
 {
 	ConsoleIoSendString("Current position = ");
@@ -201,7 +219,7 @@ static eCommandResult_T ConsoleCommandSetKp(const char buffer[])
 		result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
 		if ( COMMAND_SUCCESS == result )
 		{
-			PID.kp = (uint32_t)parameterInt;
+			PID.kp = ((uint32_t)parameterInt / 100);
 			ConsoleIoSendString("Kp updated to ");
 			ConsoleSendParamInt16((uint16_t)PID.kp);
 			ConsoleIoSendString(STR_ENDLINE);
@@ -217,7 +235,7 @@ static eCommandResult_T ConsoleCommandSetKi(const char buffer[])
 		result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
 		if ( COMMAND_SUCCESS == result )
 		{
-			PID.ki = (uint32_t)parameterInt;
+			PID.ki = ((uint32_t)parameterInt / 100);
 			ConsoleIoSendString("Ki updated to ");
 			ConsoleSendParamInt16((uint16_t)PID.ki);
 			ConsoleIoSendString(STR_ENDLINE);
@@ -233,7 +251,7 @@ static eCommandResult_T ConsoleCommandSetKd(const char buffer[])
 		result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
 		if ( COMMAND_SUCCESS == result )
 		{
-			PID.kd = (uint32_t)parameterInt;
+			PID.kd = ((uint32_t)parameterInt/100);
 			ConsoleIoSendString("Kd updated to ");
 			ConsoleSendParamInt16((uint16_t)PID.kd);
 			ConsoleIoSendString(STR_ENDLINE);

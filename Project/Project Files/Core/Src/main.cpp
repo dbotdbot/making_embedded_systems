@@ -62,7 +62,7 @@ int main(void)
   PID.angleLastError = 0;
   PID.angleErrorDer = 0;
   PID.kp = 1;
-  PID.ki = 1;
+  PID.ki = 0.001;
   PID.kd = 0;
   PID.minOut = -100;
   PID.maxOut = 100;

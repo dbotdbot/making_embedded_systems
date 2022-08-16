@@ -43,9 +43,9 @@ struct controlLoopParam{
 	float angleLastError;
 	float angleErrorDer;
 
-	uint32_t kp;
-	uint32_t ki;
-	uint32_t kd;
+	float kp;
+	float ki;
+	float kd;
 
 	int32_t maxOut;
 	int32_t minOut;
