@@ -55,6 +55,8 @@ int main(void)
   systemState.mode = 0;
   systemState.zeroRaw = -1;
   systemState.currentMode = 0;
+  systemState.noSamples = 10;
+  systemState.backOffSteps = 10;
 
   PID.lastTime = 0;
   PID.loopTime = 100;

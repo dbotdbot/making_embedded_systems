@@ -262,11 +262,18 @@ void motor::zeroMotor(encoder *ptr)
 	while((HAL_GPIO_ReadPin (GPIOD, GPIO_PIN_14)))
 	{
 		this->step();
-		HAL_Delay(100);
+		HAL_Delay(10);
 	}
 	HAL_Delay(5);
 	systemState.zeroRaw = (float)ptr->getRaw();
 
+	//back off from zero point
+	this->setDirection(1);
+	for(int i = 0; i<systemState.backOffSteps; i++)
+	{
+		this->step();
+		HAL_Delay(100);
+	}
 
 }
 

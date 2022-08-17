@@ -31,6 +31,8 @@ struct MachineState {
 	enum stepMode stepMode;
 	uint32_t mode;
 	uint32_t currentMode;
+	uint32_t noSamples;
+	uint32_t backOffSteps;
 
 
 };
