@@ -1,4 +1,4 @@
-Core/Src/motor.o: ../Core/Src/motor.cpp ../Core/Inc/motor.h \
+Core/Src/canBus.o: ../Core/Src/canBus.cpp ../Core/Inc/canBus.h \
  ../Core/Inc/global.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -30,9 +30,8 @@ Core/Src/motor.o: ../Core/Src/motor.cpp ../Core/Inc/motor.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/encoder.h ../Core/Inc/led.h ../Core/Inc/io_mapping.h \
- ../Core/Inc/processor.h ../Core/Inc/main.h
-../Core/Inc/motor.h:
+ ../Core/Inc/io_mapping.h ../Core/Inc/processor.h ../Core/Inc/main.h
+../Core/Inc/canBus.h:
 ../Core/Inc/global.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -65,8 +64,6 @@ Core/Src/motor.o: ../Core/Src/motor.cpp ../Core/Inc/motor.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/Inc/encoder.h:
-../Core/Inc/led.h:
 ../Core/Inc/io_mapping.h:
 ../Core/Inc/processor.h:
 ../Core/Inc/main.h:

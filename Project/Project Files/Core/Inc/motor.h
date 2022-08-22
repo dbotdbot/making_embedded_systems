@@ -3,6 +3,7 @@
 
 #include <global.h>
 #include <encoder.h>
+#include <led.h>
 
 class motor final {
 public:
@@ -13,7 +14,7 @@ public:
 	void setSpeed(int speedVal);
 	void changeMircoStepping(enum stepMode);
 	void step();
-	void zeroMotor(encoder*);
+	void zeroMotor(encoder*, led*);
 	void setDirection(int direction);
 	void loopPID(encoder*);
 private:

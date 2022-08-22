@@ -3,6 +3,7 @@
 
 #include "main.h"
 
+extern CAN_HandleTypeDef hcan1;
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
@@ -10,6 +11,8 @@ extern TIM_HandleTypeDef htim1;
 extern GPIO_InitTypeDef GPIO_InitStruct;
 
 enum stepMode {fullStep = 0, halfStep = 2, quarterStep = 4, eightStep = 8, sixteenthStep = 16};
+
+
 
 
 struct MachineState {

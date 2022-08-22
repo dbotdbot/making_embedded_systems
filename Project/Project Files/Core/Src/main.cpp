@@ -11,12 +11,14 @@
 #include "console.h"
 #include "global.h"
 #include <stdio.h>
+#include <cstdlib>
 
 //prototype
 int32_t controlLoop(encoder *encoder);
 
 struct MachineState systemState;
 struct controlLoopParam PID;
+CAN_HandleTypeDef hcan1;
 SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim13; //clock used for PID loop
 TIM_HandleTypeDef htim14; //clock used for step function
@@ -29,6 +31,11 @@ int main(void)
 {
   //Initialize the various parts of the system (each is encapsulated in its own c++ class with the exception of globals above)
   Machine::init();
+
+  led led1;
+  led1.init();
+  led *led1ptr;
+  led1ptr = &led1;
   //led::init();
   //motor::init();
   //encoder::init();
@@ -100,13 +107,21 @@ int main(void)
 		  		  //Motor needs to be turned on
 		  		  motor1.turnOnMotor();
 		  		  if(systemState.zeroRaw < 0){
-		  			  motor1.zeroMotor(&encoder1);
+		  			  motor1.zeroMotor(&encoder1, &led1);
 		  		  }
 		  		  systemState.currentMode = 1;
 		  	  }
 		  	  //Code for control loop
 		  	  controlLoop(&encoder1);
 		  	  motor1.setSpeed(PID.output);
+		  	  if(abs(PID.angleLastError) < 2)
+		  	  {
+		  		  led1.SetRGB(0,65535,0);
+		  	  }
+		  	  else
+		  	  {
+		  		  led1.SetRGB(65535, 0, 0);
+		  	  }
 		  	  break;
 
 	  case 2:
@@ -150,6 +165,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 }
 
+void CAN1_RX0_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
+
+  /* USER CODE END CAN1_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+  //HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &pRxHeader, &r);
+  //GPIOD->ODR=r<<12; //use output data register to turn on LEDs
+
+  /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
 int32_t controlLoop(encoder *encoder)
 {
 	int32_t waiting = 1;
@@ -185,15 +213,12 @@ int32_t controlLoop(encoder *encoder)
 			PID.angleLastError = angleError;
 			PID.lastTime = timeNow;
 
-			//ConsoleIoInit();
 			ConsoleIoSendString("Set Angle = ");
 			ConsoleSendParamInt16((uint16_t)systemState.setAngle);
 			ConsoleIoSendString(" Current Angle = ");
 			ConsoleSendParamInt16((uint16_t)currentAngle);
 			ConsoleIoSendString(" Encoder Raw = ");
 			ConsoleSendParamInt16((uint16_t)systemState.currentPos);
-			//ConsoleIoSendString(" Encoder Zero = ");
-			//ConsoleSendParamInt16((uint16_t)systemState.zeroRaw);
 			ConsoleIoSendString(" Output = ");
 			ConsoleSendParamInt16((uint16_t)PID.output);
 			ConsoleIoSendString(" Error = ");

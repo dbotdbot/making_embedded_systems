@@ -1,5 +1,6 @@
 #include <motor.h>
 #include "encoder.h"
+#include "led.h"
 #include <io_mapping.h>
 #include <processor.h>
 #include <main.h>
@@ -252,13 +253,13 @@ void motor::changeMircoStepping(enum stepMode mircoStepMode)
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, (GPIO_PinState)MS3);  //MS3
 }
 
-void motor::zeroMotor(encoder *ptr)
+void motor::zeroMotor(encoder *ptr, led *ledptr)
 {
 	//set direction
 	this->setDirection(0);
 	//step untill limit switch is triggered
 
-
+	ledptr->SetRGB(65535, 0, 0);
 	while((HAL_GPIO_ReadPin (GPIOD, GPIO_PIN_14)))
 	{
 		this->step();
@@ -274,6 +275,8 @@ void motor::zeroMotor(encoder *ptr)
 		this->step();
 		HAL_Delay(100);
 	}
+	ledptr->SetRGB(0, 35535, 0);
+	HAL_Delay(100);
 
 }
 
