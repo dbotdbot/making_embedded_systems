@@ -1,3 +1,6 @@
 ../Core/Src/canBus.cpp:9:6:void canBus::init()	16	static
-../Core/Src/canBus.cpp:34:6:void canBus::filterConfig()	16	static
-../Core/Src/canBus.cpp:38:6:static void canBus::Error_Handler()	4	static,ignoring_inline_asm
+../Core/Src/canBus.cpp:34:6:void canBus::turnOn()	16	static
+../Core/Src/canBus.cpp:42:6:void canBus::transmitHeaderConfig()	16	static
+../Core/Src/canBus.cpp:49:6:void canBus::transmit(uint32_t, uint8_t*)	32	static
+../Core/Src/canBus.cpp:62:6:void canBus::filterConfig()	56	static
+../Core/Src/canBus.cpp:77:6:static void canBus::Error_Handler()	4	static,ignoring_inline_asm

@@ -31,8 +31,47 @@ void canBus::init(){
 
 }
 
-void canBus::filterConfig(void){
+void canBus::turnOn(){
+	HAL_CAN_Start(&hcan1);
+	if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+	  {
+		  Error_Handler();
+	  }
+}
 
+void canBus::transmitHeaderConfig(void)
+{
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.StdId = 0x446;
+	TxHeader.RTR = CAN_RTR_DATA;
+}
+
+void canBus::transmit(uint32_t numDataBytes, uint8_t *data)
+{
+	TxHeader.DLC = numDataBytes;
+	for(uint32_t i = 0; i<numDataBytes; i++)
+	{
+		TxData[i] = data[i];
+	}
+	if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+	{
+	   Error_Handler ();
+	}
+}
+
+void canBus::filterConfig(void){
+	CAN_FilterTypeDef canfilterconfig;
+	canfilterconfig.FilterActivation = CAN_FILTER_ENABLE;
+	canfilterconfig.FilterBank = 10;  // which filter bank to use from the assigned ones
+	canfilterconfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+	canfilterconfig.FilterIdHigh = 0x446<<5;
+	canfilterconfig.FilterIdLow = 0;
+	canfilterconfig.FilterMaskIdHigh = 0x446<<5;
+	canfilterconfig.FilterMaskIdLow = 0x0000;
+	canfilterconfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	canfilterconfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	canfilterconfig.SlaveStartFilterBank = 20;  // how many filters to assign to the CAN1
+	HAL_CAN_ConfigFilter(&hcan1, &canfilterconfig);
 }
 
 void canBus::Error_Handler(void)
