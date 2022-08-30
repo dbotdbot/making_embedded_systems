@@ -31,7 +31,7 @@ Core/Src/consoleIo.o: ../Core/Src/consoleIo.cpp ../Core/Inc/io_mapping.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/main.h ../Core/Inc/consoleIo.h ../Core/Inc/global.h \
- ../Core/Inc/main.h
+ ../Core/Inc/main.h ../Core/Inc/canBus.h
 ../Core/Inc/io_mapping.h:
 ../Core/Inc/processor.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -68,3 +68,4 @@ Core/Src/consoleIo.o: ../Core/Src/consoleIo.cpp ../Core/Inc/io_mapping.h \
 ../Core/Inc/consoleIo.h:
 ../Core/Inc/global.h:
 ../Core/Inc/main.h:
+../Core/Inc/canBus.h:

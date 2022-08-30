@@ -9,7 +9,7 @@ extern CAN_RxHeaderTypeDef pRxHeader; //declare header for message reception
 extern CAN_TxHeaderTypeDef   TxHeader;
 
 extern uint8_t               TxData[8];
-extern uint8_t				  RxData[8];
+extern uint8_t				 RxData[8];
 
 extern uint32_t              TxMailbox;
 

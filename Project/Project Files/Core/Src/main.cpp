@@ -26,6 +26,13 @@ TIM_HandleTypeDef htim13; //clock used for PID loop
 TIM_HandleTypeDef htim14; //clock used for step function
 TIM_HandleTypeDef htim1;
 GPIO_InitTypeDef GPIO_InitStruct = {0};
+//Can bus stuff
+CAN_TxHeaderTypeDef pHeader; //declare a specific header for message transmittions
+CAN_RxHeaderTypeDef pRxHeader; //declare header for message reception
+CAN_TxHeaderTypeDef   TxHeader;
+uint8_t               TxData[8];
+uint8_t				 RxData[8];
+uint32_t              TxMailbox;
 
 int timer_val = 0;
 
@@ -51,6 +58,12 @@ int main(void)
   encoder1.init();
   encoder *encoder1ptr;
   encoder1ptr = &encoder1;
+
+  canBus canBus1;
+  canBus1.init();
+  canBus1.transmitHeaderConfig();
+  canBus1.filterConfig();
+  canBus1.turnOn();
 
 
   systemState.setpoint = 100;
@@ -124,6 +137,10 @@ int main(void)
 		  	  {
 		  		  led1.SetRGB(65535, 0, 0);
 		  	  }
+		  	  uint8_t testData[2];
+		  	  testData[0] = 1;
+		  	  testData[1] = 2;
+		  	  canBus1.transmit(2, &testData[0]);
 		  	  break;
 
 	  case 2:
